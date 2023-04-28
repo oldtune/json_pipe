@@ -1,21 +1,25 @@
 import { useState } from 'react';
 import './App.css';
-import InputBox from './inputbox/inputbox';
 
 function App() {
-  const [focusId, setFocus] = useState(1);
+  const [pipes, setPipes] = useState([]);
   return (
-    <div className="App h-full">
-      <div className='flex grow flex-row flex-wrap h-full bg-slate-200'>
-        <div className="basis-1/3 flex grow">
-          <InputBox content={'hello'} id={1}></InputBox>
+    <div className="h-full flex">
+      <div className='flex basis-2/12 bg-slate-200'>
+      </div>
+      <div className='flex grow flex-col flex-wrap basis-10/12 flex h-full bg-slate-200'>
+        <button>Add pipe <i>?</i></button>
+        {/* <div className="flex">
+          <InputSource></InputSource>
         </div>
-        <div className="basis-1/3 flex grow">
-          <InputBox content={'hello 2'} id={2}></InputBox>
+        <div className="flex">
+          <FilterOperator />
         </div>
-        <div className="basis-1/3 flex grow">
-          <InputBox content={'hello 3'} id={3}></InputBox>
-        </div>
+        <div className="flex flex-col">
+          <button className="text-6xl text-violet-500 bg-slate-300 hover:bg-slate-400 cursor-pointer">+</button>
+        </div> */}
+      </div>
+      <div className='flex basis-2/12 bg-slate-200'>
       </div>
     </div>
   );
