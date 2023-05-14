@@ -1,9 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
-import { debounce } from "../../helpers/debounce";
+import { timeDebounce } from "../../helpers/debounce";
 
 export type FilterOperatorProps = {
-    input: any[]
-    // inputString: string
+    input?: any[]
 };
 
 export const FilterOperator: React.FC<FilterOperatorProps> = (props) => {
@@ -14,7 +13,7 @@ export const FilterOperator: React.FC<FilterOperatorProps> = (props) => {
 
     useEffect(() => {
         try {
-            if (filterExpression) {
+            if (filterExpression && props.input) {
                 const func = eval(`(${filterExpression})`);
 
                 setOutput(props.input.filter(func));
@@ -30,9 +29,9 @@ export const FilterOperator: React.FC<FilterOperatorProps> = (props) => {
         setFilterExpression(e.target.value);
     };
 
-    const debouncedHandleOnChange = useCallback(debounce((e: any) => handleOnChange(e)), [filterExpression]);
+    const debouncedHandleOnChange = useCallback(timeDebounce((e: any) => handleOnChange(e)), [filterExpression]);
 
-    return <div className="flex grow gap-2 p-5 flex-wrap flex-col bg-lime-600">
+    return <div className="flex gap-2 p-5 flex-wrap flex-col bg-lime-600">
         <div>
             Filter Operator
         </div>
