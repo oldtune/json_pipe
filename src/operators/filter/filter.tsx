@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
 import { timeDebounce } from "../../helpers/debounce";
+import { OperatorProps } from "../../types/operator-props";
 
 export type FilterOperatorProps = {
-    input?: any[]
-};
+    input?: any
+} & OperatorProps;
 
 export const FilterOperator: React.FC<FilterOperatorProps> = (props) => {
     const [output, setOutput] = useState<any[]>([]);

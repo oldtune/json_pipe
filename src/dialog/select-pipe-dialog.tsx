@@ -49,6 +49,24 @@ export const SelectPipeDialog: React.FC<SelectPipeDialogProps> = (props) => {
         return AvailableCards.filter(x => x.id === id)[0]?.type;
     }
 
+    const handleClose = () => {
+        cancelSelection();
+        props.handleClose();
+    };
+
+    const handleOnCloseWithSelection = () => {
+        if (selectedCardId) {
+            const cardType = getCardTypeById(selectedCardId);
+            props.handleClose(cardType);
+            cancelSelection();
+        }
+    };
+
+    const cancelSelection = () => {
+        // card with id 0 doesn't exist => no card is highlighted
+        setSelectedCard(0);
+    }
+
     const cards = cardSource.map(card => <Grid2 xs={3} sx={{ display: "flex" }}><SelectPipeCard description={card.description}
         title={card.name}
         id={card.id}
@@ -57,7 +75,7 @@ export const SelectPipeDialog: React.FC<SelectPipeDialogProps> = (props) => {
         onClick={(id) => onClick(id)} />
     </Grid2>);
 
-    return (<Dialog open={open} onClose={() => props.handleClose()}>
+    return (<Dialog open={open} onClose={handleClose}>
         <DialogTitle>Choose operator</DialogTitle>
         <DialogContent>
             <Grid2 container spacing={1}>
@@ -65,12 +83,7 @@ export const SelectPipeDialog: React.FC<SelectPipeDialogProps> = (props) => {
             </Grid2>
         </DialogContent>
         <DialogActions>
-            <Button disabled={!selectedCardId} onClick={() => {
-                if (selectedCardId) {
-                    props.handleClose(getCardTypeById(selectedCardId))
-                    setSelectedCard(0);
-                }
-            }}>Ok</Button>
+            <Button disabled={!selectedCardId} onClick={handleOnCloseWithSelection}>Ok</Button>
         </DialogActions>
     </Dialog >);
 };

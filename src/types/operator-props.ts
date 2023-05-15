@@ -1,7 +1,7 @@
 
 export type OperatorProps = {
-    pipeId: number;
-    id: number;
     //input could be anything, string or [] or {} whatever
-    input: any;
+    input?: any;
+    //from child to parent or operator to list
+    triggerReEvaluate: (output: any) => void;
 };
