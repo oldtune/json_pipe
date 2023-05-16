@@ -1,30 +1,30 @@
-import { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import { timeDebounce } from "../../helpers/debounce";
 import { OperatorProps } from "../../types/operator-props";
 
 export type FilterOperatorProps = {
-    input?: any
+    input?: any[];
 } & OperatorProps;
 
-export const FilterOperator: React.FC<FilterOperatorProps> = (props) => {
+export const FilterOperator = React.memo((props) => {
     const [output, setOutput] = useState<any[]>([]);
     const [outputString, setOutputString] = useState('');
 
     const [filterExpression, setFilterExpression] = useState<string>('');
 
-    useEffect(() => {
+    const calculate = (input: any[], expression: string) => {
         try {
-            if (filterExpression && props.input) {
-                const func = eval(`(${filterExpression})`);
+            if (input && expression) {
+                const func = eval(`(${expression})`);
 
-                setOutput(props.input.filter(func));
-                setOutputString(JSON.stringify(output));
+                return input.filter(func);
             }
         }
         catch (err) {
             console.log(err);
+            return input;
         }
-    }, [filterExpression]);
+    }
 
     const handleOnChange = (e: any) => {
         setFilterExpression(e.target.value);
@@ -46,4 +46,4 @@ export const FilterOperator: React.FC<FilterOperatorProps> = (props) => {
             <div><textarea readOnly style={{ minWidth: '100%' }} value={outputString} /></div>
         </div>
     </div>
-}
+});

@@ -1,5 +1,5 @@
 import { Button } from '@mui/material';
-import { ReactNode, useState } from 'react';
+import { useCallback, useState } from 'react';
 import './App.css';
 import { AppContext } from './context/pipesContext';
 import { SelectPipeDialog } from './dialog/select-pipe-dialog';
@@ -24,7 +24,6 @@ function App() {
     const input = lastOperator?.output;
 
     const newOperator: Operator = {
-      element: getElement(operatorType, pipeId, operatorId),
       key: formatKey(operatorId, PipeElementType.Operator),
       id: operatorId,
       input: input,
@@ -34,43 +33,32 @@ function App() {
     return newOperator;
   }
 
-  function reEvaluate(output: any, operatorId: number) {
-    debugger
-    const operator = getOperator(operatorId);
-    if (operator) {
-      const operator = getOperator(operatorId);
-      if (operator) {
-        const index = pipe.operators.indexOf(operator);
-        const pipeLength = pipe.operators.length;
-        setPipe({
-          ...pipe,
-          operators: [...pipe.operators.slice(0, index),
-          { ...operator, output: output },
-          ...pipe.operators.slice(index + 1, pipeLength - 1)]
-        });
-      }
-    }
-  };
-
-  const getOperator: (operatorId: number) => Operator | null = (operatorId: number) => {
-    const operator = pipe.operators.find(x => x.id === operatorId);
-    if (!operator) {
-      return null;
-    }
-
-    return operator;
-  }
-
   const getLastOperator: () => Operator | null = () => {
     return pipe.operators[pipe.operators.length - 1];
   }
 
-  const getElement: (operatorType: OperatorType, pipeId: number, operatorId: number, input?: any) => ReactNode = (operatorType: OperatorType, pipeId: number, operatorId: number, input?: any) => {
-    switch (operatorType) {
-      case OperatorType.Input: return <InputSource triggerReEvaluate={(output) => { reEvaluate(output, operatorId); }}></InputSource>;
-      case OperatorType.Filter: return <FilterOperator input={input} triggerReEvaluate={(output) => { reEvaluate(output, operatorId) }}></FilterOperator>
+  const outputChanged = useCallback((output: any, id: number) => {
+    const operatorIndex = pipe.operators.findIndex(x => x.id === id);
+    if (operatorIndex === -1) {
+      return;
+    }
+
+    const operators = [...pipe.operators.slice(0, operatorIndex), { ...pipe.operators[operatorIndex], output: output }, ...pipe.operators.slice(operatorIndex + 1, pipe.operators.length)];
+
+    setPipe({
+      ...pipe,
+      operators: [...operators]
+    });
+  }, [pipe, pipe.operators]);
+
+  const getElement: any = (operator: Operator) => {
+    switch (operator.type) {
+      case OperatorType.Input: return (<InputSource key={operator.key} id={operator.id} onOutputChanged={outputChanged}></InputSource>);
+      case (OperatorType.Filter): return (<FilterOperator></FilterOperator>);
     }
   };
+
+  const components = pipe.operators.map(operator => getElement(operator));
 
   const handleClose: (operatorType?: OperatorType) => void = (operatorType?: OperatorType) => {
     if (operatorType === null || operatorType === undefined) {
@@ -83,7 +71,7 @@ function App() {
     setSelectDialogOpened(false);
     const operators: Operator[] = [...pipe.operators, newOperator];
 
-    setPipe({ ...pipe, operators: operators });
+    setPipe(Object.assign({}, { ...pipe, operators: operators }));
   };
 
   return (
@@ -93,7 +81,7 @@ function App() {
         <div className='flex basis-2/12 bg-slate-200'>
         </div>
         <div className='flex grow flex-col flex-wrap basis-8/12 flex h-full'>
-          {pipe.operators.map(operator => operator.element)}
+          {components}
           <Button variant='contained' color='secondary' onClick={addOperatorClick}>Add Operator</Button>
         </div>
         <div className='flex basis-2/12 bg-slate-200'>

@@ -1,4 +1,3 @@
-import { ReactNode } from "react";
 import { OperatorType } from "./operator-type";
 
 export type Operator = {
@@ -7,5 +6,5 @@ export type Operator = {
     input: any; //hold object
     output: any; //hold object
     type: OperatorType;
-    element: ReactNode;
+    // element: ReactNode;
 };

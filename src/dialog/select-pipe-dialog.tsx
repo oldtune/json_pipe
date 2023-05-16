@@ -19,14 +19,14 @@ const AvailableCards: CardType[] = [
         id: 2, name: "Filter", description: "Filter",
         image: "", type: OperatorType.Filter
     },
-    {
-        id: 3, name: "Custom", description: "Custom operator",
-        image: "", type: OperatorType.Custom
-    },
-    {
-        id: 4, name: "Output", description: "Output",
-        image: "", type: OperatorType.Output
-    }
+    // {
+    //     id: 3, name: "Custom", description: "Custom operator",
+    //     image: "", type: OperatorType.Custom
+    // },
+    // {
+    //     id: 4, name: "Output", description: "Output",
+    //     image: "", type: OperatorType.Output
+    // }
 ];
 
 export const SelectPipeDialog: React.FC<SelectPipeDialogProps> = (props) => {
