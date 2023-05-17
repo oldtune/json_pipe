@@ -19,7 +19,7 @@ function App() {
     setSelectDialogOpened(true);
   };
 
-  const getOperatorByType: (operatorType: OperatorType, pipeId: number, operatorId: number) => Operator = (operatorType: OperatorType, pipeId: number, operatorId: number) => {
+  const getOperatorByType: (operatorType: OperatorType, operatorId: number) => Operator = (operatorType: OperatorType, operatorId: number) => {
     const lastOperator = getLastOperator();
     const input = lastOperator?.output;
 
@@ -38,18 +38,27 @@ function App() {
   }
 
   const outputChanged = useCallback((output: any, id: number) => {
+    const operatorCount = pipe.operators.length;
     const operatorIndex = pipe.operators.findIndex(x => x.id === id);
     if (operatorIndex === -1) {
       return;
     }
 
-    const operators = [...pipe.operators.slice(0, operatorIndex), { ...pipe.operators[operatorIndex], output: output }, ...pipe.operators.slice(operatorIndex + 1, pipe.operators.length)];
+    let nextOperator = null;
+
+    //not last one, update next one output
+    if (operatorIndex !== operatorCount - 1) {
+      nextOperator = { ...pipe.operators[operatorIndex + 1], input: output };
+    }
+
+    const firstPartArray = [...pipe.operators.slice(0, operatorIndex), { ...pipe.operators[operatorIndex], output: output }];
+    const secondPartArray = nextOperator == null ? [] : [{ ...nextOperator }, ...pipe.operators.slice(operatorIndex + 2)];
 
     setPipe({
       ...pipe,
-      operators: [...operators]
+      operators: [...firstPartArray, ...secondPartArray]
     });
-  }, [pipe, pipe.operators]);
+  }, [pipe]);
 
   const getElement: any = (operator: Operator) => {
     switch (operator.type) {
@@ -66,7 +75,7 @@ function App() {
       return;
     }
 
-    const newOperator = getOperatorByType(operatorType, 1, operatorCounter);
+    const newOperator = getOperatorByType(operatorType, operatorCounter);
     setOperatorCounter(operatorCounter + 1);
     setSelectDialogOpened(false);
     const operators: Operator[] = [...pipe.operators, newOperator];

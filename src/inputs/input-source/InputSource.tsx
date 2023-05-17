@@ -6,7 +6,15 @@ export type InputSourceProps = {
 
 export const InputSource: React.FC<InputSourceProps> = (props) => {
     const onChange = (event: any) => {
-        props.onOutputChanged(event.target.value, props.id);
+        const currentInput = event.target.value;
+        try {
+            const output = JSON.parse(currentInput);
+            props.onOutputChanged(output, props.id);
+        }
+        catch (err) {
+            console.log(err);
+            console.log("Not a valid input");
+        }
     };
 
     return <div className="flex bg-red-200 p-5 flex-col gap-2">
