@@ -1,5 +1,5 @@
 import { Button } from '@mui/material';
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import './App.css';
 import { AppContext } from './context/pipesContext';
 import { SelectPipeDialog } from './dialog/select-pipe-dialog';
@@ -37,7 +37,7 @@ function App() {
     return pipe.operators[pipe.operators.length - 1];
   }
 
-  const outputChanged = useCallback((output: any, id: number) => {
+  const outputChanged = (output: any, id: number) => {
     const operatorCount = pipe.operators.length;
     const operatorIndex = pipe.operators.findIndex(x => x.id === id);
     if (operatorIndex === -1) {
@@ -58,12 +58,12 @@ function App() {
       ...pipe,
       operators: [...firstPartArray, ...secondPartArray]
     });
-  }, [pipe]);
+  };
 
   const getElement: any = (operator: Operator) => {
     switch (operator.type) {
-      case OperatorType.Input: return (<InputSource key={operator.key} id={operator.id} onOutputChanged={outputChanged}></InputSource>);
-      case (OperatorType.Filter): return (<FilterOperator></FilterOperator>);
+      case OperatorType.Input: return (<InputSource operatorCount={pipe.operators.length} key={operator.key} id={operator.id} onOutputChanged={outputChanged}></InputSource>);
+      case (OperatorType.Filter): return (<FilterOperator id={operator.id} onOutputChanged={outputChanged} input={operator.input} key={operator.key}></FilterOperator>);
     }
   };
 
@@ -78,6 +78,7 @@ function App() {
     const newOperator = getOperatorByType(operatorType, operatorCounter);
     setOperatorCounter(operatorCounter + 1);
     setSelectDialogOpened(false);
+
     const operators: Operator[] = [...pipe.operators, newOperator];
 
     setPipe(Object.assign({}, { ...pipe, operators: operators }));

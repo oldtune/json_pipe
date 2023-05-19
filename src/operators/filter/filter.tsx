@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { timeDebounce } from "../../helpers/debounce";
 import { OperatorProps } from "../../types/operator-props";
 
@@ -6,31 +6,45 @@ export type FilterOperatorProps = {
     input?: any[];
 } & OperatorProps;
 
-export const FilterOperator = React.memo((props) => {
-    const [output, setOutput] = useState<any[]>([]);
-    const [outputString, setOutputString] = useState('');
+export const FilterOperator = React.memo((props: FilterOperatorProps) => {
+    const [expression, setFilterExpression] = useState({ str: "", func: null });
 
-    const [filterExpression, setFilterExpression] = useState<string>('');
+    const output = useMemo(() => {
+        if (expression.func && props.input) {
+            try {
+                const result = props.input.filter(expression.func);
+                return result;
+            }
+            catch (err) {
+                return [];
+            }
+        }
+    }, [expression, props.input]);
 
-    const calculate = (input: any[], expression: string) => {
+    useEffect(() => {
+
+    }, [output, props.input]);
+
+    const handleOnChange = (e: any) => {
         try {
-            if (input && expression) {
-                const func = eval(`(${expression})`);
-
-                return input.filter(func);
+            const newExpression = eval(e.target.value);
+            if (newExpression) {
+                setFilterExpression({ str: e.target.value, func: newExpression });
             }
         }
         catch (err) {
-            console.log(err);
-            return input;
+            //ignore error here
         }
-    }
-
-    const handleOnChange = (e: any) => {
-        setFilterExpression(e.target.value);
     };
 
-    const debouncedHandleOnChange = useCallback(timeDebounce((e: any) => handleOnChange(e)), [filterExpression]);
+    const outputString: string = useMemo(() => {
+        const result = JSON.stringify(output);
+        return result;
+    }, [output]);
+
+    const debouncedOnChange = useCallback(timeDebounce((event: any) => {
+        handleOnChange(event);
+    }), []);
 
     return <div className="flex gap-2 p-5 flex-wrap flex-col bg-lime-600">
         <div>
@@ -38,7 +52,7 @@ export const FilterOperator = React.memo((props) => {
         </div>
         <div className="gap-2 flex flex-col">
             <div>Input expression</div>
-            <input onChange={debouncedHandleOnChange} />
+            <input onChange={debouncedOnChange} />
         </div>
         <div className="flex flex-col gap-2">
             <div>Output</div>
