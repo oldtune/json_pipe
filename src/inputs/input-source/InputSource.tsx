@@ -8,6 +8,7 @@ export const InputSource = (props: InputSourceProps) => {
     const onChange = (event: any) => {
         const currentInput = event.target.value;
         try {
+            debugger
             const output = JSON.parse(currentInput);
             props.onOutputChanged(output, props.id);
         }

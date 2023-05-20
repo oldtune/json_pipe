@@ -19,10 +19,10 @@ const AvailableCards: CardType[] = [
         id: 2, name: "Filter", description: "Filter",
         image: "", type: OperatorType.Filter
     },
-    // {
-    //     id: 3, name: "Custom", description: "Custom operator",
-    //     image: "", type: OperatorType.Custom
-    // },
+    {
+        id: 3, name: "Property Selector", description: "Select property or map",
+        image: "", type: OperatorType.PropertySelect
+    },
     // {
     //     id: 4, name: "Output", description: "Output",
     //     image: "", type: OperatorType.Output

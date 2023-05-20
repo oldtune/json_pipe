@@ -5,6 +5,7 @@ import { AppContext } from './context/pipesContext';
 import { SelectPipeDialog } from './dialog/select-pipe-dialog';
 import { InputSource } from './inputs/input-source/InputSource';
 import { FilterOperator } from './operators/filter/filter';
+import { PropertySelector } from './operators/property-selector/property-selector';
 import { Operator } from './types/operator';
 import { OperatorType } from "./types/operator-type";
 import { Pipe } from './types/pipe';
@@ -20,6 +21,7 @@ function App() {
   };
 
   const getOperatorByType: (operatorType: OperatorType, operatorId: number) => Operator = (operatorType: OperatorType, operatorId: number) => {
+    debugger
     const lastOperator = getLastOperator();
     const input = lastOperator?.output;
 
@@ -64,6 +66,7 @@ function App() {
     switch (operator.type) {
       case OperatorType.Input: return (<InputSource operatorCount={pipe.operators.length} key={operator.key} id={operator.id} onOutputChanged={outputChanged}></InputSource>);
       case (OperatorType.Filter): return (<FilterOperator id={operator.id} onOutputChanged={outputChanged} input={operator.input} key={operator.key}></FilterOperator>);
+      case (OperatorType.PropertySelect): return (<PropertySelector id={operator.id} onOutputChanged={outputChanged} input={operator.input} key={operator.key}></PropertySelector>)
     }
   };
 
@@ -88,13 +91,13 @@ function App() {
     <AppContext.Provider value={[]} >
       <SelectPipeDialog onSelected={() => { }} open={selectDialogOpened} handleClose={handleClose} />
       <div className="h-full flex">
-        <div className='flex basis-2/12 bg-slate-200'>
+        <div className='flex basis-2/12 bg-slate-200 grow'>
         </div>
-        <div className='flex grow flex-col flex-wrap basis-8/12 flex h-full'>
+        <div className='flex grow flex-col basis-8/12 flex h-full'>
           {components}
           <Button variant='contained' color='secondary' onClick={addOperatorClick}>Add Operator</Button>
         </div>
-        <div className='flex basis-2/12 bg-slate-200'>
+        <div className='flex basis-2/12 bg-slate-200 grow'>
         </div>
       </div>
     </AppContext.Provider >
