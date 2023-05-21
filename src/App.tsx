@@ -3,7 +3,7 @@ import { useState } from 'react';
 import './App.css';
 import { AppContext } from './context/pipesContext';
 import { SelectPipeDialog } from './dialog/select-pipe-dialog';
-import { InputSource } from './inputs/input-source/InputSource';
+import { InputSource } from './inputs/input-source/input-source';
 import { FilterOperator } from './operators/filter/filter';
 import { PropertySelector } from './operators/property-selector/property-selector';
 import { Operator } from './types/operator';
@@ -21,7 +21,6 @@ function App() {
   };
 
   const getOperatorByType: (operatorType: OperatorType, operatorId: number) => Operator = (operatorType: OperatorType, operatorId: number) => {
-    debugger
     const lastOperator = getLastOperator();
     const input = lastOperator?.output;
 
@@ -64,7 +63,7 @@ function App() {
 
   const getElement: any = (operator: Operator) => {
     switch (operator.type) {
-      case OperatorType.Input: return (<InputSource operatorCount={pipe.operators.length} key={operator.key} id={operator.id} onOutputChanged={outputChanged}></InputSource>);
+      case OperatorType.Input: return (<InputSource key={operator.key} id={operator.id} onOutputChanged={outputChanged}></InputSource>);
       case (OperatorType.Filter): return (<FilterOperator id={operator.id} onOutputChanged={outputChanged} input={operator.input} key={operator.key}></FilterOperator>);
       case (OperatorType.PropertySelect): return (<PropertySelector id={operator.id} onOutputChanged={outputChanged} input={operator.input} key={operator.key}></PropertySelector>)
     }

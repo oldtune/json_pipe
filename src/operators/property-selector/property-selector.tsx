@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { timeDebounce } from "../../helpers/debounce";
 import { OperatorProps } from "../../types/operator-props";
 
@@ -22,6 +22,12 @@ export const PropertySelector: React.FC<PropertySelectorOperatorProps> = (props)
             }
         }
     }, [expression, props.input]);
+
+    useEffect(() => {
+        if (output) {
+            props.onOutputChanged(output, props.id);
+        }
+    }, [output, props]);
 
     const handleOnChange = (e: any) => {
         try {

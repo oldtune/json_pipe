@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { timeDebounce } from "../../helpers/debounce";
 import { OperatorProps } from "../../types/operator-props";
 
@@ -20,6 +20,12 @@ export const FilterOperator = React.memo((props: FilterOperatorProps) => {
             }
         }
     }, [expression, props.input]);
+
+    useEffect(() => {
+        if (output && output.length > 0) {
+            props.onOutputChanged(output, props.id);
+        }
+    }, [output, props])
 
     const handleOnChange = (e: any) => {
         try {
