@@ -9,7 +9,6 @@ export const PropertySelector: React.FC<PropertySelectorOperatorProps> = (props)
     const [expression, setExpression] = useState<{ str: string, func: any }>({ str: "", func: null });
 
     const output = useMemo(() => {
-        debugger
         if (expression.func && props.input) {
             try {
                 if (Array.isArray(props.input)) {
