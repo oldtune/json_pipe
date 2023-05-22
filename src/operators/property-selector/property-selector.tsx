@@ -12,6 +12,7 @@ export const PropertySelector: React.FC<PropertySelectorOperatorProps> = (props)
         debugger
         if (expression.func && props.input) {
             try {
+                debugger
                 if (Array.isArray(props.input)) {
                     return props.input.map(expression.func);
                 }
@@ -27,7 +28,7 @@ export const PropertySelector: React.FC<PropertySelectorOperatorProps> = (props)
         if (output) {
             props.onOutputChanged(output, props.id);
         }
-    }, [output, props]);
+    }, [expression, props.input]);
 
     const handleOnChange = (e: any) => {
         try {

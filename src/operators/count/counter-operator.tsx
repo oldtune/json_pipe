@@ -2,34 +2,35 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { timeDebounce } from "../../helpers/debounce";
 import { OperatorProps } from "../../types/operator-props";
 
-export type FilterOperatorProps = {
-    input?: any[];
+export type CountOperatorProps = {
+
 } & OperatorProps;
 
-export const FilterOperator = React.memo((props: FilterOperatorProps) => {
-    const [expression, setFilterExpression] = useState({ str: "", func: null });
+export const CountOperator = React.memo((props: CountOperatorProps) => {
+    const [expression, setExpression] = useState<{ str: string, func: any }>({ str: "", func: null });
 
     const output = useMemo(() => {
         if (expression.func && props.input) {
             try {
-                const result = props.input.filter(expression.func);
-                return result;
+                return props.input.length;
             }
             catch (err) {
-                return [];
+                //ignore
             }
         }
     }, [expression, props.input]);
 
     useEffect(() => {
-        props.onOutputChanged(output, props.id);
+        if (output) {
+            props.onOutputChanged(output, props.id);
+        }
     }, [expression, props.input]);
 
     const handleOnChange = (e: any) => {
         try {
             const newExpression = eval(e.target.value);
             if (newExpression) {
-                setFilterExpression({ str: e.target.value, func: newExpression });
+                setExpression({ str: e.target.value, func: newExpression });
             }
         }
         catch (err) {
@@ -38,21 +39,16 @@ export const FilterOperator = React.memo((props: FilterOperatorProps) => {
     };
 
     const outputString: string = useMemo(() => {
-        if (output) {
-            const result = JSON.stringify(output);
-            return result;
-        }
-        return "";
+        const result = JSON.stringify(output);
+        return result;
     }, [output]);
 
     const debouncedOnChange = useCallback(timeDebounce((event: any) => {
         handleOnChange(event);
     }), []);
 
-    return <div className="flex gap-2 p-5 flex-wrap flex-col bg-lime-600">
-        <div>
-            Filter Operator
-        </div>
+    return <div className="flex bg-green-200 p-5 flex-col gap-2">
+        <div><h3>Count</h3></div>
         <div className="gap-2 flex flex-col">
             <div>Input expression</div>
             <input onChange={debouncedOnChange} />
@@ -63,4 +59,5 @@ export const FilterOperator = React.memo((props: FilterOperatorProps) => {
             <div><textarea readOnly style={{ minWidth: '100%' }} value={outputString} /></div>
         </div>
     </div>
-});
+}
+);
