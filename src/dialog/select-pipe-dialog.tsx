@@ -10,26 +10,26 @@ export type SelectPipeDialogProps = {
     onSelected: () => void;
 }
 
+const getImageFromAssets = (fileNameWithExtension: string) => {
+    return `/assets/${fileNameWithExtension}`;
+};
+
 const AvailableCards: CardType[] = [
     {
         id: 1, name: "Input", description: "This lets you input json",
-        image: "", type: OperatorType.Input
+        image: getImageFromAssets("input.png"), type: OperatorType.Input
     },
     {
         id: 2, name: "Filter", description: "Filter",
-        image: "", type: OperatorType.Filter
+        image: getImageFromAssets("filter.jpg"), type: OperatorType.Filter
     },
     {
-        id: 3, name: "Property Selector", description: "Select property or map",
-        image: "", type: OperatorType.PropertySelect
+        id: 3, name: "Map/Extract", description: "Select property or map",
+        image: getImageFromAssets("mapping.png"), type: OperatorType.PropertySelect
     },
     {
-        id: 4, name: "Count", description: "Count", image: "", type: OperatorType.Count
+        id: 4, name: "Count", description: "Count", image: getImageFromAssets("counting.png"), type: OperatorType.Count
     }
-    // {
-    //     id: 4, name: "Output", description: "Output",
-    //     image: "", type: OperatorType.Output
-    // }
 ];
 
 export const SelectPipeDialog: React.FC<SelectPipeDialogProps> = (props) => {
@@ -75,6 +75,7 @@ export const SelectPipeDialog: React.FC<SelectPipeDialogProps> = (props) => {
         id={card.id}
         key={card.id}
         selected={card.id === selectedCardId}
+        image={card.image}
         onClick={(id) => onClick(id)} />
     </Grid2>);
 
