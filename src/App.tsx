@@ -4,6 +4,7 @@ import './App.css';
 import { AppContext } from './context/pipesContext';
 import { SelectPipeDialog } from './dialog/select-pipe-dialog';
 import { InputSource } from './inputs/input-source/input-source';
+import { CountOperator } from './operators/count/counter-operator';
 import { FilterOperator } from './operators/filter/filter';
 import { PropertySelector } from './operators/property-selector/property-selector';
 import { Operator } from './types/operator';
@@ -66,6 +67,7 @@ function App() {
       case OperatorType.Input: return (<InputSource key={operator.key} id={operator.id} onOutputChanged={outputChanged}></InputSource>);
       case (OperatorType.Filter): return (<FilterOperator id={operator.id} onOutputChanged={outputChanged} input={operator.input} key={operator.key}></FilterOperator>);
       case (OperatorType.PropertySelect): return (<PropertySelector id={operator.id} onOutputChanged={outputChanged} input={operator.input} key={operator.key}></PropertySelector>)
+      case (OperatorType.Count): return <CountOperator id={operator.id} onOutputChanged={outputChanged} input={operator.input} key={operator.key}></CountOperator>
     }
   };
 
@@ -83,16 +85,28 @@ function App() {
 
     const operators: Operator[] = [...pipe.operators, newOperator];
 
-    setPipe(Object.assign({}, { ...pipe, operators: operators }));
+    setPipe({ ...pipe, operators: operators });
   };
+
+  const handleRemove = (operatorId: number) => {
+    const operators = pipe.operators;
+    const operatorIndex = operators.findIndex(x => x.id == operatorId);
+    const isLastOperator = (operators.length - 1) == operatorIndex;
+    if (operatorIndex) {
+      const input = operators[operatorIndex].input;
+      const firstHalf = operators.slice(operatorIndex);
+      const secondHalf = isLastOperator ? [] : [{ ...operators[operatorIndex + 1], input: input }, ...operators.slice(operatorIndex + 2)];
+      setPipe({ ...pipe, operators: [...firstHalf, ...secondHalf] });
+    }
+  }
 
   return (
     <AppContext.Provider value={[]} >
       <SelectPipeDialog onSelected={() => { }} open={selectDialogOpened} handleClose={handleClose} />
-      <div className="h-full flex">
+      <div className="h-full flex grow overflow-scroll flex-wrap">
         <div className='flex basis-2/12 bg-slate-200 grow'>
         </div>
-        <div className='flex grow flex-col basis-8/12 flex h-full'>
+        <div className='flex grow flex-col basis-8/12'>
           {components}
           <Button variant='contained' color='secondary' onClick={addOperatorClick}>Add Operator</Button>
         </div>

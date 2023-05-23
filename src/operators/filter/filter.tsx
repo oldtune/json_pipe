@@ -22,10 +22,8 @@ export const FilterOperator = React.memo((props: FilterOperatorProps) => {
     }, [expression, props.input]);
 
     useEffect(() => {
-        if (output && output.length > 0) {
-            props.onOutputChanged(output, props.id);
-        }
-    }, [output, props])
+        props.onOutputChanged(output, props.id);
+    }, [expression, props.input]);
 
     const handleOnChange = (e: any) => {
         try {
@@ -40,8 +38,11 @@ export const FilterOperator = React.memo((props: FilterOperatorProps) => {
     };
 
     const outputString: string = useMemo(() => {
-        const result = JSON.stringify(output);
-        return result;
+        if (output) {
+            const result = JSON.stringify(output);
+            return result;
+        }
+        return "";
     }, [output]);
 
     const debouncedOnChange = useCallback(timeDebounce((event: any) => {

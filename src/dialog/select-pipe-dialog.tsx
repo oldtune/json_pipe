@@ -23,6 +23,9 @@ const AvailableCards: CardType[] = [
         id: 3, name: "Property Selector", description: "Select property or map",
         image: "", type: OperatorType.PropertySelect
     },
+    {
+        id: 4, name: "Count", description: "Count", image: "", type: OperatorType.Count
+    }
     // {
     //     id: 4, name: "Output", description: "Output",
     //     image: "", type: OperatorType.Output

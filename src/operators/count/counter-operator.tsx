@@ -1,21 +1,18 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { timeDebounce } from "../../helpers/debounce";
 import { OperatorProps } from "../../types/operator-props";
 
-export type PropertySelectorOperatorProps = {
+export type CountOperatorProps = {
 
 } & OperatorProps;
-export const PropertySelector: React.FC<PropertySelectorOperatorProps> = (props) => {
+
+export const CountOperator = React.memo((props: CountOperatorProps) => {
     const [expression, setExpression] = useState<{ str: string, func: any }>({ str: "", func: null });
 
     const output = useMemo(() => {
         if (expression.func && props.input) {
             try {
-                debugger
-                if (Array.isArray(props.input)) {
-                    return props.input.map(expression.func);
-                }
-                return expression.func(props.input);
+                return props.input.length;
             }
             catch (err) {
                 //ignore
@@ -50,8 +47,8 @@ export const PropertySelector: React.FC<PropertySelectorOperatorProps> = (props)
         handleOnChange(event);
     }), []);
 
-    return <div className="flex bg-yellow-200 p-5 flex-col gap-2">
-        <div><h3>Property Selector</h3></div>
+    return <div className="flex bg-green-200 p-5 flex-col gap-2">
+        <div><h3>Count</h3></div>
         <div className="gap-2 flex flex-col">
             <div>Input expression</div>
             <input onChange={debouncedOnChange} />
@@ -63,3 +60,4 @@ export const PropertySelector: React.FC<PropertySelectorOperatorProps> = (props)
         </div>
     </div>
 }
+);
