@@ -7,17 +7,16 @@ export type SelectPipeCardProps = {
     id: number;
     title: string;
     description: string;
+    image: string;
 };
 
 export const SelectPipeCard: React.FC<SelectPipeCardProps> = (props) => {
     return <Card sx={{ maxWidth: 345, border: props.selected ? "1px solid #FFD700" : "", display: "flex", alignSelf: "stretch" }} onClick={() => props.onClick(props.id)}>
-        <CardActionArea sx={{ height: "100%" }}>
-            <CardMedia
+        <CardActionArea>
+            <CardMedia sx={{ maxHeight: "200px" }}
                 component="img"
-                height="100px"
-                width="100px"
-                image="https://i.imgur.com/H3ATCtI.jpeg"
-                alt="green iguana"
+                image={props.image}
+                alt="Operator"
             />
             <CardContent>
                 <Typography gutterBottom variant="h5" component="div">
