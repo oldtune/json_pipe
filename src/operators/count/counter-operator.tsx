@@ -47,16 +47,16 @@ export const CountOperator = React.memo((props: CountOperatorProps) => {
         handleOnChange(event);
     }), []);
 
-    return <div className="flex bg-green-200 p-5 flex-col gap-2">
+    return <div className="flex bg-orange-300 p-5 flex-col gap-2 border-solid rounded">
         <div><h3>Count</h3></div>
         <div className="gap-2 flex flex-col">
             <div>Input expression</div>
-            <input onChange={debouncedOnChange} />
+            <input placeholder="Input an expression here 👉, Ex: x => x.students" onChange={debouncedOnChange} />
         </div>
         <div className="flex flex-col gap-2">
             <div>Output</div>
             <div>Brief output here</div>
-            <div><textarea readOnly style={{ minWidth: '100%' }} value={outputString} /></div>
+            <div><textarea placeholder="Output goes here 👉" readOnly style={{ minWidth: '100%' }} value={outputString} /></div>
         </div>
     </div>
 }

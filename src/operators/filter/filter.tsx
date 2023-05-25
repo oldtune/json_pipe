@@ -49,7 +49,7 @@ export const FilterOperator = React.memo((props: FilterOperatorProps) => {
         handleOnChange(event);
     }), []);
 
-    return <div className="flex gap-2 p-5 flex-wrap flex-col bg-lime-600">
+    return <div className="flex gap-2 p-5 flex-wrap flex-col bg-red-300 border-solid rounded">
         <div>
             Filter Operator
         </div>

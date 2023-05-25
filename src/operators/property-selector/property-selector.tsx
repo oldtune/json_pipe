@@ -46,12 +46,25 @@ export const PropertySelector: React.FC<PropertySelectorOperatorProps> = (props)
         return result;
     }, [output]);
 
+    const metaData: string = useMemo(() => {
+        if (output) {
+            if (Array.isArray(output)) {
+                return `[] - ${output.length} items`
+            }
+            else {
+                return "{} - Object";
+            }
+        }
+
+        return "";
+    }, [output]);
+
     const debouncedOnChange = useCallback(timeDebounce((event: any) => {
         handleOnChange(event);
     }), []);
 
-    return <div className="flex bg-yellow-200 p-5 flex-col gap-2">
-        <div><h3>Property Selector</h3></div>
+    return <div className="flex bg-green-900 p-5 flex-col gap-2 border-solid rounded">
+        <div><span className="font-bold">Property Selector</span> {metaData}</div>
         <div className="gap-2 flex flex-col">
             <div>Input expression</div>
             <input onChange={debouncedOnChange} />

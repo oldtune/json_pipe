@@ -6,4 +6,5 @@ export type OperatorProps = {
     //from child to parent or operator to list
     // triggerReEvaluate: (output: any) => void;
     onOutputChanged: (output: any, id: number) => void;
+    onRemove: (id: number) => void;
 };
