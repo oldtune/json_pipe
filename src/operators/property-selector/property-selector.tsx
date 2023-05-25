@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { timeDebounce } from "../../helpers/debounce";
+import { getMetaData } from "../../helpers/object-metadata";
 import { OperatorProps } from "../../types/operator-props";
 
 export type PropertySelectorOperatorProps = {
@@ -47,32 +48,23 @@ export const PropertySelector: React.FC<PropertySelectorOperatorProps> = (props)
     }, [output]);
 
     const metaData: string = useMemo(() => {
-        if (output) {
-            if (Array.isArray(output)) {
-                return `[] - ${output.length} items`
-            }
-            else {
-                return "{} - Object";
-            }
-        }
-
-        return "";
+        return getMetaData(output);
     }, [output]);
 
     const debouncedOnChange = useCallback(timeDebounce((event: any) => {
         handleOnChange(event);
     }), []);
 
-    return <div className="flex bg-green-900 p-5 flex-col gap-2 border-solid rounded">
+    return <div className="flex bg-gray-300 p-5 flex-col gap-2 border-solid rounded mb-3">
         <div><span className="font-bold">Property Selector</span> {metaData}</div>
         <div className="gap-2 flex flex-col">
             <div>Input expression</div>
-            <input onChange={debouncedOnChange} />
+            <input placeholder="Input expression here to map() on array or get only a property of an object or map to new array of object. Ex: 'x => x.followers' or 'x => x.name' or 'x => ({name: x.name})" onChange={debouncedOnChange} />
         </div>
         <div className="flex flex-col gap-2">
             <div>Output</div>
             <div>Brief output here</div>
-            <div><textarea readOnly style={{ minWidth: '100%' }} value={outputString} /></div>
+            <div><textarea readOnly placeholder="Output goes here 👉" style={{ minWidth: '100%' }} value={outputString} /></div>
         </div>
     </div>
 }

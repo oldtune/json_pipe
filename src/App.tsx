@@ -3,6 +3,8 @@ import { useState } from 'react';
 import './App.css';
 import { AppContext } from './context/pipesContext';
 import { SelectPipeDialog } from './dialog/select-pipe-dialog';
+import { HandDown } from './handdown/hand-down';
+import { insertAlternate } from './helpers/array-insert-alternate';
 import { InputSource } from './inputs/input-source/input-source';
 import { CountOperator } from './operators/count/counter-operator';
 import { FilterOperator } from './operators/filter/filter';
@@ -83,7 +85,7 @@ function App() {
     }
   };
 
-  const components = pipe.operators.map(operator => getElement(operator));
+  const components = insertAlternate(pipe.operators.map(operator => getElement(operator)), <HandDown />, false);
 
   const handleClose: (operatorType?: OperatorType) => void = (operatorType?: OperatorType) => {
     if (operatorType === null || operatorType === undefined) {

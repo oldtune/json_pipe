@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { timeDebounce } from "../../helpers/debounce";
+import { getMetaData } from "../../helpers/object-metadata";
 import { OperatorProps } from "../../types/operator-props";
 
 export type FilterOperatorProps = {
@@ -45,22 +46,26 @@ export const FilterOperator = React.memo((props: FilterOperatorProps) => {
         return "";
     }, [output]);
 
+    const metaData = useMemo(() => {
+        return getMetaData(output);
+    }, [output]);
+
     const debouncedOnChange = useCallback(timeDebounce((event: any) => {
         handleOnChange(event);
     }), []);
 
-    return <div className="flex gap-2 p-5 flex-wrap flex-col bg-red-300 border-solid rounded">
+    return <div className="flex gap-2 p-5 flex-wrap flex-col bg-gray-300 border-solid rounded mb-3">
         <div>
-            Filter Operator
+            <span className="font-bold">Filter Operator</span> {metaData}
         </div>
         <div className="gap-2 flex flex-col">
             <div>Input expression</div>
-            <input onChange={debouncedOnChange} />
+            <input placeholder="Input expression here. Ex: x=>x.name =='Harry Spotter'" onChange={debouncedOnChange} />
         </div>
         <div className="flex flex-col gap-2">
             <div>Output</div>
             <div>Brief output here</div>
-            <div><textarea readOnly style={{ minWidth: '100%' }} value={outputString} /></div>
+            <div><textarea placeholder="Ouput an array here 👉" readOnly style={{ minWidth: '100%' }} value={outputString} /></div>
         </div>
     </div>
 });

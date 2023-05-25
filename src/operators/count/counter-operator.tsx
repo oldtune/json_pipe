@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { timeDebounce } from "../../helpers/debounce";
+import { getMetaData } from "../../helpers/object-metadata";
 import { OperatorProps } from "../../types/operator-props";
 
 export type CountOperatorProps = {
@@ -43,12 +44,16 @@ export const CountOperator = React.memo((props: CountOperatorProps) => {
         return result;
     }, [output]);
 
+    const metaData = useMemo(() => {
+        return getMetaData(output);
+    }, [output]);
+
     const debouncedOnChange = useCallback(timeDebounce((event: any) => {
         handleOnChange(event);
     }), []);
 
-    return <div className="flex bg-orange-300 p-5 flex-col gap-2 border-solid rounded">
-        <div><h3>Count</h3></div>
+    return <div className="flex bg-gray-300 p-5 flex-col gap-2 border-solid rounded mb-3">
+        <div><span className="font-bold">Count</span> {metaData}</div>
         <div className="gap-2 flex flex-col">
             <div>Input expression</div>
             <input placeholder="Input an expression here 👉, Ex: x => x.students" onChange={debouncedOnChange} />

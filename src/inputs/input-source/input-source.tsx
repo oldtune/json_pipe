@@ -1,5 +1,6 @@
 import { useCallback, useState } from "react";
 import { timeDebounce } from "../../helpers/debounce";
+import { getMetaData } from "../../helpers/object-metadata";
 import { OperatorProps } from "../../types/operator-props";
 
 export type InputSourceProps = {
@@ -13,13 +14,8 @@ export const InputSource = (props: InputSourceProps) => {
             if (currentInput) {
                 const currentValue = JSON.parse(currentInput);
                 onOutputChanged(currentValue, props.id);
-
-                if (Array.isArray(currentValue)) {
-                    setMetadata(`[] - ${currentValue.length} items`);
-                }
-                else {
-                    setMetadata("{} - Object");
-                }
+                const currentValueMetaData = getMetaData(currentValue);
+                setMetadata(currentValueMetaData);
             }
         }
         catch (err) {
@@ -31,7 +27,7 @@ export const InputSource = (props: InputSourceProps) => {
         onChange(event, onOutputChanged);
     }), []);
 
-    return <div className="flex bg-gray-200 p-5 flex-col gap-2 rounded border-solid ">
+    return <div className="flex bg-gray-300 p-5 flex-col gap-2 rounded border-solid mb-3">
         <div>
             <span className="font-bold">Json text input</span> {metaData}
         </div>
