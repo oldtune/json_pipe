@@ -16,19 +16,26 @@ const getImageFromAssets = (fileNameWithExtension: string) => {
 
 const AvailableCards: CardType[] = [
     {
-        id: 1, name: "Input", description: "This lets you input json",
+        id: 1, name: "Input", description: "",
         image: getImageFromAssets("input.png"), type: OperatorType.Input
     },
     {
-        id: 2, name: "Filter", description: "Filter",
+        id: 2, name: "Filter", description: "",
         image: getImageFromAssets("filter.jpg"), type: OperatorType.Filter
     },
     {
-        id: 3, name: "Map/Extract", description: "Select property or map",
+        id: 3, name: "Map/Extract", description: "",
         image: getImageFromAssets("mapping.png"), type: OperatorType.PropertySelect
     },
     {
-        id: 4, name: "Count", description: "Count", image: getImageFromAssets("counting.png"), type: OperatorType.Count
+        id: 4, name: "Count", description: "", image: getImageFromAssets("counting.png"), type: OperatorType.Count
+    },
+    {
+        id: 5, name: "Sum", description: "", image: getImageFromAssets("sum.png"),
+        type: OperatorType.Sum
+    },
+    {
+        id: 6, name: "Any", description: "", image: getImageFromAssets("anyone.png"), type: OperatorType.Any
     }
 ];
 

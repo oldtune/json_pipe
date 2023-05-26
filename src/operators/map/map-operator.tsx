@@ -1,38 +1,42 @@
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import { Tooltip } from "@mui/material";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { timeDebounce } from "../../helpers/debounce";
 import { getMetaData } from "../../helpers/object-metadata";
 import { OperatorProps } from "../../types/operator-props";
 
-export type FilterOperatorProps = {
-    input?: any[];
-} & OperatorProps;
+export type MapOperatorProps = {
 
-export const FilterOperator = React.memo((props: FilterOperatorProps) => {
-    const [expression, setFilterExpression] = useState({ str: "", func: null });
+} & OperatorProps;
+export const MapOperator: React.FC<MapOperatorProps> = (props) => {
+    const [expression, setExpression] = useState<{ str: string, func: any }>({ str: "", func: null });
 
     const output = useMemo(() => {
         if (expression.func && props.input) {
             try {
-                const result = props.input.filter(expression.func);
-                return result;
+                debugger
+                if (Array.isArray(props.input)) {
+                    return props.input.map(expression.func);
+                }
+                return expression.func(props.input);
             }
             catch (err) {
-                return [];
+                //ignore
             }
         }
     }, [expression, props.input]);
 
     useEffect(() => {
-        props.onOutputChanged(output, props.id);
+        if (output) {
+            props.onOutputChanged(output, props.id);
+        }
     }, [expression, props.input]);
 
     const handleOnChange = (e: any) => {
         try {
             const newExpression = eval(e.target.value);
             if (newExpression) {
-                setFilterExpression({ str: e.target.value, func: newExpression });
+                setExpression({ str: e.target.value, func: newExpression });
             }
         }
         catch (err) {
@@ -41,14 +45,11 @@ export const FilterOperator = React.memo((props: FilterOperatorProps) => {
     };
 
     const outputString: string = useMemo(() => {
-        if (output) {
-            const result = JSON.stringify(output);
-            return result;
-        }
-        return "";
+        const result = JSON.stringify(output);
+        return result;
     }, [output]);
 
-    const metaData = useMemo(() => {
+    const metaData: string = useMemo(() => {
         return getMetaData(output);
     }, [output]);
 
@@ -56,19 +57,19 @@ export const FilterOperator = React.memo((props: FilterOperatorProps) => {
         handleOnChange(event);
     }), []);
 
-    return <div className="flex gap-2 p-5 flex-wrap flex-col bg-gray-300 border-solid rounded mb-3">
+    return <div className="flex bg-gray-300 p-5 flex-col gap-2 border-solid rounded mb-3">
         <div className="flex flex-row justify-between">
-            <div><span className="font-bold">Filter Operator</span> {metaData}</div>
+            <div><span className="font-bold">Property Selector</span> {metaData}</div>
             <span className="cursor-pointer hover:text-red-600"><Tooltip title='End me, quick!'><HighlightOffIcon /></Tooltip></span>
         </div>
         <div className="gap-2 flex flex-col">
             <div>Input expression</div>
-            <input placeholder="Input expression here. Ex: x=>x.name =='Harry Spotter'" onChange={debouncedOnChange} />
+            <input placeholder="Input expression here to map() on array or get only a property of an object or map to new array of object. Ex: 'x => x.followers' or 'x => x.name' or 'x => ({name: x.name})" onChange={debouncedOnChange} />
         </div>
         <div className="flex flex-col gap-2">
             <div>Output</div>
             <div>Brief output here</div>
-            <div><textarea placeholder="Ouput an array here 👉" readOnly style={{ minWidth: '100%' }} value={outputString} /></div>
+            <div><textarea readOnly placeholder="Output goes here 👉" style={{ minWidth: '100%' }} value={outputString} /></div>
         </div>
     </div>
-});
+}

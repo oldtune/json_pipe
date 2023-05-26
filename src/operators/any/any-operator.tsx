@@ -1,23 +1,32 @@
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
+import { Tooltip } from '@mui/material';
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { timeDebounce } from "../../helpers/debounce";
 import { getMetaData } from "../../helpers/object-metadata";
 import { OperatorProps } from "../../types/operator-props";
 
-export type CountOperatorProps = {
+export type AnyOperatorProps = {
 
 } & OperatorProps;
 
-export const CountOperator = React.memo((props: CountOperatorProps) => {
+export const AnyOperator = React.memo((props: AnyOperatorProps) => {
     const [expression, setExpression] = useState<{ str: string, func: any }>({ str: "", func: null });
 
     const output = useMemo(() => {
-        if (expression.func && props.input) {
-            try {
-                return props.input.length;
+        try {
+            if (expression.func) {
+                if (Array.isArray(props.input)) {
+                    return props.input.filter(expression.func).length > 0;
+                }
             }
-            catch (err) {
-                //ignore
+            else if (typeof props.input === "object") {
+                return props.input.filter(expression.func(props.input)).length > 0;
             }
+
+            return false;
+        }
+        catch (e) {
+            return false;
         }
     }, [expression, props.input]);
 
@@ -53,10 +62,13 @@ export const CountOperator = React.memo((props: CountOperatorProps) => {
     }), []);
 
     return <div className="flex bg-gray-300 p-5 flex-col gap-2 border-solid rounded mb-3">
-        <div><span className="font-bold">Count</span> {metaData}</div>
+        <div className="flex flex-row justify-between">
+            <div><span className="font-bold">Any</span> {metaData}</div>
+            <span className="cursor-pointer hover:text-red-600"><Tooltip title='End me, quick!'><HighlightOffIcon /></Tooltip></span>
+        </div>
         <div className="gap-2 flex flex-col">
             <div>Input expression</div>
-            <input placeholder="Input an expression here 👉, Ex: x => x.students" onChange={debouncedOnChange} />
+            <input placeholder="Input an expression here 👉, Ex: x => x.students or x => x" onChange={debouncedOnChange} />
         </div>
         <div className="flex flex-col gap-2">
             <div>Output</div>

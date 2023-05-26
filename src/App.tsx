@@ -6,9 +6,11 @@ import { SelectPipeDialog } from './dialog/select-pipe-dialog';
 import { HandDown } from './handdown/hand-down';
 import { insertAlternate } from './helpers/array-insert-alternate';
 import { InputSource } from './inputs/input-source/input-source';
-import { CountOperator } from './operators/count/counter-operator';
+import { AnyOperator } from './operators/any/any-operator';
+import { CountOperator } from './operators/count/count-operator';
 import { FilterOperator } from './operators/filter/filter';
-import { PropertySelector } from './operators/property-selector/property-selector';
+import { MapOperator } from './operators/map/map-operator';
+import { SumOperator } from './operators/sum/sum-operator';
 import { Operator } from './types/operator';
 import { OperatorType } from "./types/operator-type";
 import { Pipe } from './types/pipe';
@@ -67,10 +69,11 @@ function App() {
   const handleRemove = (operatorId: number) => {
     const operators = pipe.operators;
     const operatorIndex = operators.findIndex(x => x.id == operatorId);
-    const isLastOperator = (operators.length - 1) == operatorIndex;
-    if (operatorIndex) {
+
+    if (operatorIndex != -1) {
+      const isLastOperator = (operators.length - 1) == operatorIndex;
       const input = operators[operatorIndex].input;
-      const firstHalf = operators.slice(operatorIndex);
+      const firstHalf = operators.slice(0, operatorIndex);
       const secondHalf = isLastOperator ? [] : [{ ...operators[operatorIndex + 1], input: input }, ...operators.slice(operatorIndex + 2)];
       setPipe({ ...pipe, operators: [...firstHalf, ...secondHalf] });
     }
@@ -80,8 +83,10 @@ function App() {
     switch (operator.type) {
       case OperatorType.Input: return (<InputSource onRemove={handleRemove} key={operator.key} id={operator.id} onOutputChanged={outputChanged}></InputSource>);
       case (OperatorType.Filter): return (<FilterOperator onRemove={handleRemove} id={operator.id} onOutputChanged={outputChanged} input={operator.input} key={operator.key}></FilterOperator>);
-      case (OperatorType.PropertySelect): return (<PropertySelector onRemove={handleRemove} id={operator.id} onOutputChanged={outputChanged} input={operator.input} key={operator.key}></PropertySelector>)
+      case (OperatorType.PropertySelect): return (<MapOperator onRemove={handleRemove} id={operator.id} onOutputChanged={outputChanged} input={operator.input} key={operator.key}></MapOperator>)
       case (OperatorType.Count): return <CountOperator onRemove={handleRemove} id={operator.id} onOutputChanged={outputChanged} input={operator.input} key={operator.key}></CountOperator>
+      case (OperatorType.Sum): return <SumOperator onRemove={handleRemove} id={operator.id} onOutputChanged={outputChanged} input={operator.input} key={operator.key}></SumOperator>
+      case (OperatorType.Any): return <AnyOperator onRemove={handleRemove} id={operator.id} onOutputChanged={outputChanged} input={operator.input} key={operator.key}></AnyOperator>
     }
   };
 

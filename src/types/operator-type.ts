@@ -2,7 +2,9 @@ export enum OperatorType {
     Input,
     Filter,
     PropertySelect,
-    Count
+    Count,
+    Sum,
+    Any
     // Custom,
     // Output
 };
