@@ -59,7 +59,7 @@ export const FilterOperator = React.memo((props: FilterOperatorProps) => {
     return <div className="flex gap-2 p-5 flex-wrap flex-col bg-gray-300 border-solid rounded mb-3">
         <div className="flex flex-row justify-between">
             <div><span className="font-bold">Filter Operator</span> {metaData}</div>
-            <span className="cursor-pointer hover:text-red-600"><Tooltip title='End me, quick!'><HighlightOffIcon /></Tooltip></span>
+            <span className="cursor-pointer hover:text-red-600" onClick={() => props.onRemove(props.id)}><Tooltip title='End me, quick!'><HighlightOffIcon /></Tooltip></span>
         </div>
         <div className="gap-2 flex flex-col">
             <div>Input expression</div>

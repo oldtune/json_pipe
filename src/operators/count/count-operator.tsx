@@ -57,7 +57,7 @@ export const CountOperator = React.memo((props: CountOperatorProps) => {
     return <div className="flex bg-gray-300 p-5 flex-col gap-2 border-solid rounded mb-3">
         <div className="flex flex-row justify-between">
             <div><span className="font-bold">Count</span> {metaData}</div>
-            <span className="cursor-pointer hover:text-red-600"><Tooltip title='End me, quick!'><HighlightOffIcon /></Tooltip></span>
+            <span className="cursor-pointer hover:text-red-600" onClick={() => { props.onRemove(props.id) }}><Tooltip title='End me, quick!'><HighlightOffIcon /></Tooltip></span>
         </div>
         <div className="gap-2 flex flex-col">
             <div>Input expression</div>
